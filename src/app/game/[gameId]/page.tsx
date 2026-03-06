@@ -5,6 +5,7 @@ import { getAdapter } from '@/lib/data';
 import { getTeam } from '@/lib/teams';
 import { APP_URL } from '@/lib/constants';
 import ScoreBoard from '@/components/ScoreBoard';
+import DiamondView from '@/components/DiamondView';
 import EventTimeline from '@/components/EventTimeline';
 import OhtaniTracker from '@/components/OhtaniTracker';
 import AutoRefresh from '@/components/AutoRefresh';
@@ -47,11 +48,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function GamePage({ params }: Props) {
   const { gameId } = await params;
   const adapter = getAdapter();
-  const [game, events, thread, ohtani] = await Promise.all([
+  const [game, events, thread, ohtani, situation] = await Promise.all([
     adapter.getGame(gameId),
     adapter.getEvents(gameId),
     adapter.getThread(gameId),
     adapter.getPlayerTracker(gameId, '大谷翔平'),
+    adapter.getGameSituation(gameId),
   ]);
 
   if (!game) {
@@ -60,6 +62,8 @@ export default async function GamePage({ params }: Props) {
 
   const posts = thread ? await adapter.getPosts(thread.id) : [];
   const isLive = game.status === 'live';
+  const home = getTeam(game.home_team);
+  const away = getTeam(game.away_team);
 
   return (
     <div className="py-6 space-y-6">
@@ -77,6 +81,15 @@ export default async function GamePage({ params }: Props) {
       </Link>
 
       <ScoreBoard game={game} />
+
+      {/* Diamond View - only for live games */}
+      {isLive && situation && (
+        <DiamondView
+          situation={situation}
+          awayTeam={away.nameJa}
+          homeTeam={home.nameJa}
+        />
+      )}
 
       <ShareButtons game={game} />
 

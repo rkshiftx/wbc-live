@@ -1,4 +1,4 @@
-import type { Game, GameEvent, Thread, Post, PlayerTracker, TournamentGame } from '@/types/game';
+import type { Game, GameEvent, Thread, Post, PlayerTracker, TournamentGame, GameSituation } from '@/types/game';
 
 export interface DataSourceAdapter {
   getGames(date?: string): Promise<Game[]>;
@@ -8,4 +8,5 @@ export interface DataSourceAdapter {
   getPosts(threadId: string): Promise<Post[]>;
   getTournament(): Promise<TournamentGame[]>;
   getPlayerTracker(gameId: string, playerName: string): Promise<PlayerTracker | null>;
+  getGameSituation(gameId: string): Promise<GameSituation | null>;
 }

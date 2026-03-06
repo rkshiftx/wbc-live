@@ -80,6 +80,30 @@ export interface PlayerTracker {
   };
 }
 
+export interface GameSituation {
+  game_id: string;
+  batter: { name: string; number: number; avg: string } | null;
+  next_batter: { name: string; number: number; avg: string } | null;
+  pitcher: { name: string; number: number; era: string } | null;
+  count: { balls: number; strikes: number; outs: number };
+  runners: {
+    first: string | null;
+    second: string | null;
+    third: string | null;
+  };
+  defense: {
+    pitcher: string;
+    catcher: string;
+    first: string;
+    second: string;
+    third: string;
+    shortstop: string;
+    left: string;
+    center: string;
+    right: string;
+  };
+}
+
 export interface TournamentGame {
   id: string;
   round: 'pool' | 'quarter' | 'semi' | 'final';

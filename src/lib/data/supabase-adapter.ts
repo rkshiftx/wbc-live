@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { DataSourceAdapter } from './adapter';
-import type { Game, GameEvent, Thread, Post, PlayerTracker, TournamentGame } from '@/types/game';
+import type { Game, GameEvent, Thread, Post, PlayerTracker, TournamentGame, GameSituation } from '@/types/game';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -102,5 +102,15 @@ export class SupabaseAdapter implements DataSourceAdapter {
         avg: ab > 0 ? (hits / ab).toFixed(3) : '.000',
       },
     };
+  }
+
+  async getGameSituation(gameId: string): Promise<GameSituation | null> {
+    const { data, error } = await supabase
+      .from('game_situations')
+      .select('*')
+      .eq('game_id', gameId)
+      .single();
+    if (error) return null;
+    return data;
   }
 }

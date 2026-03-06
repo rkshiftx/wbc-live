@@ -1,5 +1,5 @@
 import type { DataSourceAdapter } from './adapter';
-import type { Game, GameEvent, Thread, Post, PlayerTracker, TournamentGame } from '@/types/game';
+import type { Game, GameEvent, Thread, Post, PlayerTracker, TournamentGame, GameSituation } from '@/types/game';
 
 const MOCK_GAMES: Game[] = [
   {
@@ -243,6 +243,55 @@ const MOCK_TOURNAMENT: TournamentGame[] = [
   { id: 'final-1', round: 'final', home_team: null, away_team: null, score_home: 0, score_away: 0, status: 'tbd', starts_at: '2026-03-17T19:00:00+09:00' },
 ];
 
+const MOCK_SITUATIONS: Record<string, GameSituation> = {
+  'game-001': {
+    game_id: 'game-001',
+    batter: { name: '牧 秀悟', number: 2, avg: '.333' },
+    next_batter: { name: '源田 壮亮', number: 6, avg: '.250' },
+    pitcher: { name: 'Satoria', number: 31, era: '4.50' },
+    count: { balls: 1, strikes: 2, outs: 1 },
+    runners: {
+      first: '近藤 健介',
+      second: null,
+      third: null,
+    },
+    defense: {
+      pitcher: 'Satoria',
+      catcher: 'Cervenka',
+      first: 'Hejma',
+      second: 'Mlejnek',
+      third: 'Schneider',
+      shortstop: 'Drabek',
+      left: 'Vesely',
+      center: 'Ondrusek',
+      right: 'Hasek',
+    },
+  },
+  'game-005': {
+    game_id: 'game-005',
+    batter: { name: 'H. Brown', number: 8, avg: '.200' },
+    next_batter: { name: 'J. Smith', number: 12, avg: '.150' },
+    pitcher: { name: 'Gerrit Cole', number: 45, era: '2.85' },
+    count: { balls: 0, strikes: 0, outs: 0 },
+    runners: {
+      first: null,
+      second: null,
+      third: null,
+    },
+    defense: {
+      pitcher: 'Gerrit Cole',
+      catcher: 'J.T. Realmuto',
+      first: 'Freddie Freeman',
+      second: 'Marcus Semien',
+      third: 'Nolan Arenado',
+      shortstop: 'Trea Turner',
+      left: 'Kyle Schwarber',
+      center: 'Mike Trout',
+      right: 'Mookie Betts',
+    },
+  },
+};
+
 export class MockAdapter implements DataSourceAdapter {
   async getGames(): Promise<Game[]> {
     return MOCK_GAMES;
@@ -271,5 +320,9 @@ export class MockAdapter implements DataSourceAdapter {
   async getPlayerTracker(_gameId: string, playerName: string): Promise<PlayerTracker | null> {
     if (playerName === '大谷翔平') return MOCK_OHTANI;
     return null;
+  }
+
+  async getGameSituation(gameId: string): Promise<GameSituation | null> {
+    return MOCK_SITUATIONS[gameId] ?? null;
   }
 }
