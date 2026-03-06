@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WBC 超速報
 
-## Getting Started
+WBC 2026 リアルタイムスコア・実況・共有 PWA
 
-First, run the development server:
+## 機能
+
+- **リアルタイムスコア**: イニング別スコアボード付き
+- **共有カード**: OGP画像自動生成、X/LINEワンタップ共有
+- **匿名実況スレ**: リアルタイム書き込み + ニコニコ風リアクション
+- **大谷トラッカー**: 打席結果を専用表示
+- **トーナメント表**: プール〜決勝まで一覧
+
+## ローカル起動
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+http://localhost:3000 でアクセス
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 環境変数
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 変数 | 説明 | デフォルト |
+|------|------|-----------|
+| `DATA_SOURCE` | `mock` or `supabase` | `mock` |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase URL | - |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key | - |
+| `NEXT_PUBLIC_APP_URL` | アプリURL | `http://localhost:3000` |
 
-## Learn More
+## Supabase セットアップ
 
-To learn more about Next.js, take a look at the following resources:
+1. Supabase プロジェクト作成
+2. `supabase/migrations/00001_create_tables.sql` をSQL Editorで実行
+3. `.env.local` にURL/Keyを設定
+4. `DATA_SOURCE=supabase` に変更
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## デプロイ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Vercelに接続してpushするだけ。環境変数はVercel Dashboardで設定。
 
-## Deploy on Vercel
+## 技術スタック
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js 16 (App Router) + TypeScript
+- Tailwind CSS v4
+- Supabase (DB + Realtime)
+- `next/og` (Satori) でOGP画像生成
