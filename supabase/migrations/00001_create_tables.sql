@@ -78,6 +78,19 @@ CREATE TABLE IF NOT EXISTS notification_logs (
   UNIQUE(event_id, subscription_id)
 );
 
+-- Game situations (live state)
+CREATE TABLE IF NOT EXISTS game_situations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  game_id UUID NOT NULL REFERENCES games(id) ON DELETE CASCADE UNIQUE,
+  batter JSONB,
+  next_batter JSONB,
+  pitcher JSONB,
+  count JSONB NOT NULL DEFAULT '{"balls":0,"strikes":0,"outs":0}',
+  runners JSONB NOT NULL DEFAULT '{"first":null,"second":null,"third":null}',
+  defense JSONB NOT NULL DEFAULT '{}',
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- RLS policies
 ALTER TABLE games ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public read" ON games FOR SELECT USING (true);
@@ -94,3 +107,9 @@ CREATE POLICY "Anyone can post" ON posts FOR INSERT WITH CHECK (true);
 
 ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can report" ON reports FOR INSERT WITH CHECK (true);
+
+ALTER TABLE game_situations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read" ON game_situations FOR SELECT USING (true);
+
+-- Realtime publication
+ALTER PUBLICATION supabase_realtime ADD TABLE games, events, posts, game_situations;

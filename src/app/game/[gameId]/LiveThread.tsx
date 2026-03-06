@@ -254,23 +254,40 @@ export default function LiveThread({ threadId, initialPosts, gameStatus }: Props
     }, 4500);
   }, []);
 
-  const handleSubmit = useCallback((e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!body.trim() || cooldown > 0) return;
 
-    const newPost: Post = {
+    const trimmed = body.trim();
+
+    // Optimistic update
+    const tempPost: Post = {
       id: `local-${Date.now()}`,
       thread_id: threadId,
       anon_id: anonId.current.slice(0, 8),
-      body: body.trim(),
+      body: trimmed,
       reply_to_post_id: null,
       created_at: new Date().toISOString(),
       deleted_at: null,
     };
-
-    setPosts(prev => [...prev, newPost]);
+    setPosts(prev => [...prev, tempPost]);
     setBody('');
     setCooldown(POST_COOLDOWN_SEC);
+
+    // Save to DB
+    try {
+      await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          thread_id: threadId,
+          anon_id: anonId.current,
+          body: trimmed,
+        }),
+      });
+    } catch {
+      // Optimistic update already shows the post
+    }
   }, [body, cooldown, threadId]);
 
   const handleReply = useCallback((postId: string) => {

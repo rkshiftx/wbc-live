@@ -12,6 +12,8 @@ export default function GameCard({ game }: Props) {
   const away = getTeam(game.away_team);
   const isLive = game.status === 'live';
   const isFinal = game.status === 'final';
+  const isScheduled = game.status === 'scheduled';
+  const isTbd = game.home_team === 'TBD' || game.away_team === 'TBD';
   const hasInnings = game.inning_scores && game.inning_scores.length > 0;
 
   // Determine winning team for final games
@@ -55,23 +57,27 @@ export default function GameCard({ game }: Props) {
           <div className="flex items-center gap-2">
             <span className="text-lg">{away.flag}</span>
             <span className={`text-sm font-medium ${awayWins ? 'text-white' : isFinal ? 'text-gray-400' : 'text-white'}`}>
-              {away.nameJa}
+              {isTbd && game.away_team === 'TBD' ? '未定' : away.nameJa}
             </span>
           </div>
-          <span className={`text-xl font-bold tabular-nums ${awayWins ? 'text-white' : isFinal && !awayWins ? 'text-gray-500' : 'text-white'}`}>
-            {game.score_away}
-          </span>
+          {!isScheduled && (
+            <span className={`text-xl font-bold tabular-nums ${awayWins ? 'text-white' : isFinal && !awayWins ? 'text-gray-500' : 'text-white'}`}>
+              {game.score_away}
+            </span>
+          )}
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-lg">{home.flag}</span>
             <span className={`text-sm font-medium ${homeWins ? 'text-white' : isFinal ? 'text-gray-400' : 'text-white'}`}>
-              {home.nameJa}
+              {isTbd && game.home_team === 'TBD' ? '未定' : home.nameJa}
             </span>
           </div>
-          <span className={`text-xl font-bold tabular-nums ${homeWins ? 'text-white' : isFinal && !homeWins ? 'text-gray-500' : 'text-white'}`}>
-            {game.score_home}
-          </span>
+          {!isScheduled && (
+            <span className={`text-xl font-bold tabular-nums ${homeWins ? 'text-white' : isFinal && !homeWins ? 'text-gray-500' : 'text-white'}`}>
+              {game.score_home}
+            </span>
+          )}
         </div>
       </div>
 
