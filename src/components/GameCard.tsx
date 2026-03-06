@@ -12,6 +12,7 @@ export default function GameCard({ game }: Props) {
   const away = getTeam(game.away_team);
   const isLive = game.status === 'live';
   const isFinal = game.status === 'final';
+  const hasInnings = game.inning_scores && game.inning_scores.length > 0;
 
   // Determine winning team for final games
   const homeWins = isFinal && game.score_home > game.score_away;
@@ -73,6 +74,26 @@ export default function GameCard({ game }: Props) {
           </span>
         </div>
       </div>
+
+      {/* Mini inning score for live/final games */}
+      {hasInnings && (isLive || isFinal) && (
+        <div className="mt-3 pt-3 border-t border-gray-800/50">
+          <div className="flex gap-0.5 overflow-x-auto">
+            {game.inning_scores!.map((s, i) => (
+              <div key={i} className="text-center min-w-[20px]">
+                <div className="text-[9px] text-gray-600">{s.inning}</div>
+                <div className="text-[10px] text-gray-400 tabular-nums">{s.away ?? '-'}</div>
+                <div className="text-[10px] text-gray-400 tabular-nums">{s.home ?? '-'}</div>
+              </div>
+            ))}
+            <div className="text-center min-w-[24px] ml-1 border-l border-gray-800 pl-1">
+              <div className="text-[9px] text-gray-500">R</div>
+              <div className="text-[10px] text-white font-bold tabular-nums">{game.score_away}</div>
+              <div className="text-[10px] text-white font-bold tabular-nums">{game.score_home}</div>
+            </div>
+          </div>
+        </div>
+      )}
     </Link>
   );
 }

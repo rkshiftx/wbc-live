@@ -6,6 +6,9 @@ import { getTeam } from '@/lib/teams';
 import { APP_URL } from '@/lib/constants';
 import ScoreBoard from '@/components/ScoreBoard';
 import DiamondView from '@/components/DiamondView';
+import LiveBanner from '@/components/LiveBanner';
+import LineupCard from '@/components/LineupCard';
+import TeamStats from '@/components/TeamStats';
 import EventTimeline from '@/components/EventTimeline';
 import OhtaniTracker from '@/components/OhtaniTracker';
 import AutoRefresh from '@/components/AutoRefresh';
@@ -66,7 +69,7 @@ export default async function GamePage({ params }: Props) {
   const away = getTeam(game.away_team);
 
   return (
-    <div className="py-6 space-y-6">
+    <div className="py-6 space-y-5">
       <AutoRefresh enabled={isLive} intervalMs={10000} />
 
       {/* Back link */}
@@ -79,6 +82,11 @@ export default async function GamePage({ params }: Props) {
         </svg>
         試合一覧
       </Link>
+
+      {/* Live event banner */}
+      {isLive && events.length > 0 && (
+        <LiveBanner events={events} />
+      )}
 
       <ScoreBoard game={game} />
 
@@ -93,9 +101,22 @@ export default async function GamePage({ params }: Props) {
 
       <ShareButtons game={game} />
 
+      {/* Team stats comparison */}
+      <TeamStats
+        homeTeam={game.home_team}
+        awayTeam={game.away_team}
+        homeFlag={home.flag}
+        awayFlag={away.flag}
+      />
+
       {ohtani && <OhtaniTracker tracker={ohtani} />}
 
       <EventTimeline events={events} />
+
+      {/* Lineup - only for live/final games with situation data */}
+      {situation && (isLive || game.status === 'final') && (
+        <LineupCard situation={situation} teamName={home.nameJa} />
+      )}
 
       {thread && (
         <LiveThread
