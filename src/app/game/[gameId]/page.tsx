@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { getAdapter } from '@/lib/data';
 import { getTeam } from '@/lib/teams';
 import { APP_URL } from '@/lib/constants';
 import ScoreBoard from '@/components/ScoreBoard';
 import EventTimeline from '@/components/EventTimeline';
 import OhtaniTracker from '@/components/OhtaniTracker';
+import AutoRefresh from '@/components/AutoRefresh';
 import ShareButtons from './ShareButtons';
 import LiveThread from './LiveThread';
 
@@ -52,17 +55,27 @@ export default async function GamePage({ params }: Props) {
   ]);
 
   if (!game) {
-    return (
-      <div className="py-12 text-center text-gray-500">
-        試合が見つかりません
-      </div>
-    );
+    notFound();
   }
 
   const posts = thread ? await adapter.getPosts(thread.id) : [];
+  const isLive = game.status === 'live';
 
   return (
     <div className="py-6 space-y-6">
+      <AutoRefresh enabled={isLive} intervalMs={10000} />
+
+      {/* Back link */}
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-white transition px-1"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+        試合一覧
+      </Link>
+
       <ScoreBoard game={game} />
 
       <ShareButtons game={game} />

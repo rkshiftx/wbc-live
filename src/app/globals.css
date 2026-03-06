@@ -5,8 +5,14 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   font-family: var(--font-sans), sans-serif;
+  overscroll-behavior-y: none;
 }
 
 /* ニコニコ風リアクション */
@@ -15,21 +21,28 @@ body {
     transform: translateX(100vw);
     opacity: 1;
   }
+  85% {
+    opacity: 1;
+  }
   100% {
     transform: translateX(-100%);
-    opacity: 0.8;
+    opacity: 0;
   }
 }
 
 .nico-reaction {
   animation: niconico 4s linear forwards;
   position: fixed;
+  left: 0;
   white-space: nowrap;
   pointer-events: none;
   z-index: 100;
   font-size: 1.5rem;
   font-weight: bold;
-  text-shadow: 0 0 4px rgba(0,0,0,0.8);
+  text-shadow:
+    0 0 4px rgba(0,0,0,0.9),
+    0 0 8px rgba(0,0,0,0.5);
+  color: white;
 }
 
 /* スコア変更時のパルス */
@@ -42,6 +55,14 @@ body {
   animation: score-pulse 0.5s ease-in-out 3;
 }
 
+/* LIVE dot ping */
+@keyframes live-ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
 /* スクロールバー */
 ::-webkit-scrollbar {
   width: 4px;
@@ -52,4 +73,15 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #374151;
   border-radius: 2px;
+}
+
+/* Selection */
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+}
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
 }

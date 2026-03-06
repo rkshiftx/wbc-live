@@ -42,14 +42,28 @@ export default function RootLayout({
     <html lang="ja">
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/api/icon?size=180" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}`,
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-950 text-white min-h-screen`}
       >
         <Header />
         <main className="max-w-lg mx-auto px-4 pb-24">{children}</main>
+        <footer className="border-t border-gray-800/50 mt-8">
+          <div className="max-w-lg mx-auto px-4 py-6 text-center">
+            <p className="text-xs text-gray-600">
+              WBC 超速報 2026 — リアルタイムスコア・実況・共有
+            </p>
+          </div>
+        </footer>
       </body>
     </html>
   );

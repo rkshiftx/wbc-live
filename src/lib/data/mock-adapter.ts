@@ -21,6 +21,22 @@ const MOCK_GAMES: Game[] = [
     ],
   },
   {
+    id: 'game-005',
+    starts_at: '2026-03-07T19:00:00+09:00',
+    home_team: 'USA',
+    away_team: 'GBR',
+    status: 'live',
+    score_home: 3,
+    score_away: 0,
+    inning: 'T4',
+    inning_scores: [
+      { inning: 1, home: 1, away: 0 },
+      { inning: 2, home: 0, away: 0 },
+      { inning: 3, home: 2, away: 0 },
+      { inning: 4, home: null, away: null },
+    ],
+  },
+  {
     id: 'game-002',
     starts_at: '2026-03-07T12:00:00+09:00',
     home_team: 'KOR',
@@ -42,6 +58,27 @@ const MOCK_GAMES: Game[] = [
     ],
   },
   {
+    id: 'game-006',
+    starts_at: '2026-03-07T12:00:00+09:00',
+    home_team: 'DOM',
+    away_team: 'VEN',
+    status: 'final',
+    score_home: 4,
+    score_away: 6,
+    inning: 'F',
+    inning_scores: [
+      { inning: 1, home: 0, away: 2 },
+      { inning: 2, home: 1, away: 0 },
+      { inning: 3, home: 0, away: 1 },
+      { inning: 4, home: 2, away: 0 },
+      { inning: 5, home: 0, away: 0 },
+      { inning: 6, home: 0, away: 1 },
+      { inning: 7, home: 1, away: 0 },
+      { inning: 8, home: 0, away: 2 },
+      { inning: 9, home: 0, away: 0 },
+    ],
+  },
+  {
     id: 'game-003',
     starts_at: '2026-03-08T19:00:00+09:00',
     home_team: 'JPN',
@@ -56,6 +93,16 @@ const MOCK_GAMES: Game[] = [
     starts_at: '2026-03-08T12:00:00+09:00',
     home_team: 'TPE',
     away_team: 'CZE',
+    status: 'scheduled',
+    score_home: 0,
+    score_away: 0,
+    inning: null,
+  },
+  {
+    id: 'game-007',
+    starts_at: '2026-03-08T19:00:00+09:00',
+    home_team: 'USA',
+    away_team: 'MEX',
     status: 'scheduled',
     score_home: 0,
     score_away: 0,
@@ -111,11 +158,32 @@ const MOCK_EVENTS: Record<string, GameEvent[]> = {
       unique_key: 'game001_hr_B6_yoshida',
     },
   ],
+  'game-005': [
+    {
+      id: 'evt-010',
+      game_id: 'game-005',
+      event_type: 'hr',
+      payload_json: { inning: 'B1', team: 'USA', player: 'Mike Trout', runs: 1, score_home: 1, score_away: 0, description: 'Mike Trout ソロホームラン！センターへ' },
+      source_ts: null,
+      created_at: '2026-03-07T19:20:00+09:00',
+      unique_key: 'game005_hr_B1_trout',
+    },
+    {
+      id: 'evt-011',
+      game_id: 'game-005',
+      event_type: 'score',
+      payload_json: { inning: 'B3', team: 'USA', runs: 2, score_home: 3, score_away: 0, description: 'Mookie Betts 2点タイムリー' },
+      source_ts: null,
+      created_at: '2026-03-07T19:50:00+09:00',
+      unique_key: 'game005_score_B3',
+    },
+  ],
 };
 
 const MOCK_THREADS: Record<string, Thread> = {
   'game-001': { id: 'thread-001', game_id: 'game-001', created_at: '2026-03-07T18:30:00+09:00' },
   'game-002': { id: 'thread-002', game_id: 'game-002', created_at: '2026-03-07T11:30:00+09:00' },
+  'game-005': { id: 'thread-005', game_id: 'game-005', created_at: '2026-03-07T18:30:00+09:00' },
 };
 
 const MOCK_POSTS: Record<string, Post[]> = {
@@ -125,6 +193,12 @@ const MOCK_POSTS: Record<string, Post[]> = {
     { id: 'post-003', thread_id: 'thread-001', anon_id: 'c2a8b5d3', body: '今日の大谷の打撃フォーム完璧だな', reply_to_post_id: null, created_at: '2026-03-07T19:56:00+09:00', deleted_at: null },
     { id: 'post-004', thread_id: 'thread-001', anon_id: 'a3f2c1e8', body: '吉田もきたああああ！！', reply_to_post_id: null, created_at: '2026-03-07T20:30:15+09:00', deleted_at: null },
     { id: 'post-005', thread_id: 'thread-001', anon_id: 'd9e1f4a6', body: 'チェコのピッチャーかわいそうになってきた', reply_to_post_id: null, created_at: '2026-03-07T20:30:30+09:00', deleted_at: null },
+    { id: 'post-006', thread_id: 'thread-001', anon_id: 'e5b3a7c9', body: '侍ジャパン強すぎ', reply_to_post_id: null, created_at: '2026-03-07T20:31:00+09:00', deleted_at: null },
+    { id: 'post-007', thread_id: 'thread-001', anon_id: 'f1d8c4b2', body: '次のオーストラリア戦も圧勝してほしい', reply_to_post_id: null, created_at: '2026-03-07T20:31:30+09:00', deleted_at: null },
+  ],
+  'thread-005': [
+    { id: 'post-010', thread_id: 'thread-005', anon_id: 'x1y2z3w4', body: 'Troutが初回からぶっ放してて草', reply_to_post_id: null, created_at: '2026-03-07T19:20:30+09:00', deleted_at: null },
+    { id: 'post-011', thread_id: 'thread-005', anon_id: 'p5q6r7s8', body: 'アメリカの投手陣えぐいな', reply_to_post_id: null, created_at: '2026-03-07T19:45:00+09:00', deleted_at: null },
   ],
 };
 
@@ -141,14 +215,29 @@ const MOCK_OHTANI: PlayerTracker = {
 };
 
 const MOCK_TOURNAMENT: TournamentGame[] = [
+  // Pool A
+  { id: 'pa-1', round: 'pool', pool: 'A', home_team: 'USA', away_team: 'GBR', score_home: 3, score_away: 0, status: 'live', starts_at: '2026-03-07T19:00:00+09:00' },
+  { id: 'pa-2', round: 'pool', pool: 'A', home_team: 'MEX', away_team: 'COL', score_home: 8, score_away: 3, status: 'final', starts_at: '2026-03-07T12:00:00+09:00' },
+  { id: 'pa-3', round: 'pool', pool: 'A', home_team: 'USA', away_team: 'MEX', score_home: 0, score_away: 0, status: 'scheduled', starts_at: '2026-03-08T19:00:00+09:00' },
+  { id: 'pa-4', round: 'pool', pool: 'A', home_team: 'GBR', away_team: 'COL', score_home: 0, score_away: 0, status: 'scheduled', starts_at: '2026-03-08T12:00:00+09:00' },
   // Pool B
   { id: 'game-001', round: 'pool', pool: 'B', home_team: 'JPN', away_team: 'CZE', score_home: 7, score_away: 1, status: 'live', starts_at: '2026-03-07T19:00:00+09:00' },
   { id: 'game-002', round: 'pool', pool: 'B', home_team: 'KOR', away_team: 'AUS', score_home: 5, score_away: 2, status: 'final', starts_at: '2026-03-07T12:00:00+09:00' },
   { id: 'game-003', round: 'pool', pool: 'B', home_team: 'JPN', away_team: 'AUS', score_home: 0, score_away: 0, status: 'scheduled', starts_at: '2026-03-08T19:00:00+09:00' },
   { id: 'game-004', round: 'pool', pool: 'B', home_team: 'TPE', away_team: 'CZE', score_home: 0, score_away: 0, status: 'scheduled', starts_at: '2026-03-08T12:00:00+09:00' },
+  // Pool C
+  { id: 'pc-1', round: 'pool', pool: 'C', home_team: 'DOM', away_team: 'VEN', score_home: 4, score_away: 6, status: 'final', starts_at: '2026-03-07T12:00:00+09:00' },
+  { id: 'pc-2', round: 'pool', pool: 'C', home_team: 'PUR', away_team: 'ISR', score_home: 0, score_away: 0, status: 'scheduled', starts_at: '2026-03-07T19:00:00+09:00' },
+  { id: 'pc-3', round: 'pool', pool: 'C', home_team: 'DOM', away_team: 'PUR', score_home: 0, score_away: 0, status: 'scheduled', starts_at: '2026-03-08T19:00:00+09:00' },
+  { id: 'pc-4', round: 'pool', pool: 'C', home_team: 'VEN', away_team: 'ISR', score_home: 0, score_away: 0, status: 'scheduled', starts_at: '2026-03-08T12:00:00+09:00' },
+  // Pool D
+  { id: 'pd-1', round: 'pool', pool: 'D', home_team: 'CUB', away_team: 'NED', score_home: 0, score_away: 0, status: 'scheduled', starts_at: '2026-03-09T19:00:00+09:00' },
+  { id: 'pd-2', round: 'pool', pool: 'D', home_team: 'PAN', away_team: 'ITA', score_home: 0, score_away: 0, status: 'scheduled', starts_at: '2026-03-09T12:00:00+09:00' },
   // Knockout rounds (TBD)
   { id: 'qf-1', round: 'quarter', home_team: null, away_team: null, score_home: 0, score_away: 0, status: 'tbd', starts_at: '2026-03-13T19:00:00+09:00' },
   { id: 'qf-2', round: 'quarter', home_team: null, away_team: null, score_home: 0, score_away: 0, status: 'tbd', starts_at: '2026-03-13T12:00:00+09:00' },
+  { id: 'qf-3', round: 'quarter', home_team: null, away_team: null, score_home: 0, score_away: 0, status: 'tbd', starts_at: '2026-03-14T19:00:00+09:00' },
+  { id: 'qf-4', round: 'quarter', home_team: null, away_team: null, score_home: 0, score_away: 0, status: 'tbd', starts_at: '2026-03-14T12:00:00+09:00' },
   { id: 'sf-1', round: 'semi', home_team: null, away_team: null, score_home: 0, score_away: 0, status: 'tbd', starts_at: '2026-03-15T19:00:00+09:00' },
   { id: 'sf-2', round: 'semi', home_team: null, away_team: null, score_home: 0, score_away: 0, status: 'tbd', starts_at: '2026-03-16T19:00:00+09:00' },
   { id: 'final-1', round: 'final', home_team: null, away_team: null, score_home: 0, score_away: 0, status: 'tbd', starts_at: '2026-03-17T19:00:00+09:00' },
