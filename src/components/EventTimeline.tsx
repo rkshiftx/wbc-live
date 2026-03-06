@@ -1,6 +1,6 @@
 import type { GameEvent } from '@/types/game';
 import { getTeam } from '@/lib/teams';
-import { inningDisplay, formatTime } from '@/lib/utils';
+import { formatTime } from '@/lib/utils';
 
 interface Props {
   events: GameEvent[];
@@ -25,7 +25,7 @@ export default function EventTimeline({ events }: Props) {
               }`}
             >
               <div className="text-xs text-gray-500 pt-0.5 min-w-[40px]">
-                {inningDisplay(evt.payload_json.inning as string)}
+                {(evt.payload_json.inning as string) ?? ''}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">

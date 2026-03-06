@@ -1,3 +1,5 @@
+import { getAdapter } from '@/lib/data';
+
 interface Props {
   homeTeam: string;
   awayTeam: string;
@@ -5,24 +7,33 @@ interface Props {
   awayFlag: string;
 }
 
-// Mock team stats - in production from API
-const MOCK_STATS: Record<string, { wins: number; losses: number; rs: number; ra: number }> = {
-  JPN: { wins: 2, losses: 0, rs: 15, ra: 3 },
-  CZE: { wins: 0, losses: 2, rs: 2, ra: 12 },
-  KOR: { wins: 1, losses: 1, rs: 7, ra: 6 },
-  AUS: { wins: 0, losses: 2, rs: 4, ra: 10 },
-  USA: { wins: 1, losses: 0, rs: 5, ra: 1 },
-  DOM: { wins: 0, losses: 1, rs: 4, ra: 6 },
-  VEN: { wins: 1, losses: 0, rs: 6, ra: 4 },
-};
+async function getTeamStats(teamCode: string) {
+  const adapter = getAdapter();
+  const games = await adapter.getGames();
+  const finished = games.filter(g => g.status === 'final');
 
-function getStats(code: string) {
-  return MOCK_STATS[code] ?? { wins: 0, losses: 0, rs: 0, ra: 0 };
+  let wins = 0, losses = 0, rs = 0, ra = 0;
+  for (const g of finished) {
+    if (g.home_team === teamCode) {
+      rs += g.score_home;
+      ra += g.score_away;
+      if (g.score_home > g.score_away) wins++;
+      else losses++;
+    } else if (g.away_team === teamCode) {
+      rs += g.score_away;
+      ra += g.score_home;
+      if (g.score_away > g.score_home) wins++;
+      else losses++;
+    }
+  }
+  return { wins, losses, rs, ra };
 }
 
-export default function TeamStats({ homeTeam, awayTeam, homeFlag, awayFlag }: Props) {
-  const home = getStats(homeTeam);
-  const away = getStats(awayTeam);
+export default async function TeamStats({ homeTeam, awayTeam, homeFlag, awayFlag }: Props) {
+  const [home, away] = await Promise.all([
+    getTeamStats(homeTeam),
+    getTeamStats(awayTeam),
+  ]);
 
   return (
     <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
